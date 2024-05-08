@@ -9,6 +9,8 @@ public interface UserService {
     void delete (Long id);
     List<User> getList();
 
+    void updateUser(Long id, User newUser);
+
     User getUserAndRoles(User user, String[] roles);
 
     List<User> getUserByUsername (String name);
