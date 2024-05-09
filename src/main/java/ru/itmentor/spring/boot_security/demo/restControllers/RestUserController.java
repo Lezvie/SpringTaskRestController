@@ -13,10 +13,8 @@ import ru.itmentor.spring.boot_security.demo.model.User;
 @RestController
 @RequestMapping("/api/user")
 public class RestUserController {
-
-
     @GetMapping()
-    public ResponseEntity<User>  getAllUser() {
+    public ResponseEntity<User>getUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Object principal = auth.getPrincipal();
         if (principal instanceof User) {
@@ -25,5 +23,4 @@ public class RestUserController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
 }

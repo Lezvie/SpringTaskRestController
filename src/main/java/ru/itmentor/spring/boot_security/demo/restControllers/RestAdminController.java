@@ -6,14 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.itmentor.spring.boot_security.demo.model.User;
 import ru.itmentor.spring.boot_security.demo.service.UserService;
-import ru.itmentor.spring.boot_security.demo.util.UpdateUserException;
-import ru.itmentor.spring.boot_security.demo.util.UserErrorResponse;
-import ru.itmentor.spring.boot_security.demo.util.UserNotFoundException;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/admin")
 public class RestAdminController {
     private final UserService userService;
 
@@ -24,16 +21,16 @@ public class RestAdminController {
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUser() {
-        return ResponseEntity.ok(userService.getList());
+       return ResponseEntity.ok(userService.getList());
     }
 
     @PostMapping("/create")
     public ResponseEntity<String> createUser(@RequestBody User user) {
         try {
             userService.create(user);
-            return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
+            return new ResponseEntity<>("User create successfully", HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("User not created", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -42,10 +39,8 @@ public class RestAdminController {
         try {
             userService.delete(id);
             return new ResponseEntity<>("User deleted", HttpStatus.OK);
-        } catch (UserNotFoundException e) {
-            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            return new ResponseEntity<>("An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("User not deleted ", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -54,12 +49,8 @@ public class RestAdminController {
         try {
             userService.updateUser(id, newUser);
             return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
-        } catch (UserNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (UpdateUserException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
-            return new ResponseEntity<>("An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("User not updated", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -67,16 +58,5 @@ public class RestAdminController {
     public ResponseEntity<User> getUserById(@PathVariable("id") long id) {
            userService.getUserById(id);
             return ResponseEntity.ok(userService.getUserById(id));
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<UserErrorResponse> handlerException(UserNotFoundException e) {
-        UserErrorResponse response = new UserErrorResponse(
-                "User with this id wasn't found",
-                System.currentTimeMillis()
-        );
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-
-
     }
 }
