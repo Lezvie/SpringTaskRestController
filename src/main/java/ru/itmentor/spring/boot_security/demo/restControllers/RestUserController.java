@@ -17,10 +17,7 @@ public class RestUserController {
     public ResponseEntity<User>getUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Object principal = auth.getPrincipal();
-        if (principal instanceof User) {
             User user = (User) principal;
             return ResponseEntity.ok(user);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

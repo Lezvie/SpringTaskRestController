@@ -25,12 +25,12 @@ public class RestAdminController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createUser(@RequestBody User user) {
+    public ResponseEntity<User> createUser(@RequestBody User user) {
         try {
             userService.create(user);
-            return new ResponseEntity<>("User create successfully", HttpStatus.OK);
+            return new ResponseEntity<User>(user, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("User not created", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<User>(user, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -45,18 +45,17 @@ public class RestAdminController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateUser(@PathVariable long id, @RequestBody User newUser) {
+    public ResponseEntity<User> updateUser(@PathVariable long id, @RequestBody User newUser) {
         try {
             userService.updateUser(id, newUser);
-            return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
+            return new ResponseEntity<User>(newUser, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("User not updated", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<User>(newUser, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/users/{id}")
     public ResponseEntity<User> getUserById(@PathVariable("id") long id) {
-           userService.getUserById(id);
             return ResponseEntity.ok(userService.getUserById(id));
     }
 }
